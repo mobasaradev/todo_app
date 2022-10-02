@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/firebase/auth.dart';
 
-class LogIn extends StatefulWidget {
-  const LogIn({super.key});
+class RegisterView extends StatefulWidget {
+  const RegisterView({super.key});
 
   @override
-  State<LogIn> createState() => _LogInState();
+  State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _LogInState extends State<LogIn> {
+class _RegisterViewState extends State<RegisterView> {
   AuthService auth = AuthService();
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
@@ -24,7 +24,7 @@ class _LogInState extends State<LogIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Login"),
+        title: const Text("Register"),
       ),
       body: FutureBuilder(
         builder: (context, snapshot) {
@@ -52,7 +52,7 @@ class _LogInState extends State<LogIn> {
                     ),
                     OutlinedButton(
                       onPressed: () async {
-                        await auth.login(
+                        await auth.register(
                           email.text,
                           password.text,
                           context,
@@ -63,7 +63,7 @@ class _LogInState extends State<LogIn> {
                           EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                         ),
                       ),
-                      child: const Text("LogIn"),
+                      child: const Text("Register"),
                     ),
                   ],
                 ),
