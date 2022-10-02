@@ -28,49 +28,42 @@ class _RegisterViewState extends State<RegisterView> {
       ),
       body: FutureBuilder(
         builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: email,
-                      decoration:
-                          const InputDecoration(hintText: "email@gmail.com"),
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    TextFormField(
-                      controller: password,
-                      decoration:
-                          const InputDecoration(hintText: "password123"),
-                      obscureText: true,
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    OutlinedButton(
-                      onPressed: () async {
-                        await auth.register(
-                          email.text,
-                          password.text,
-                          context,
-                        );
-                      },
-                      style: const ButtonStyle(
-                        padding: MaterialStatePropertyAll(
-                          EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                        ),
-                      ),
-                      child: const Text("Register"),
-                    ),
-                  ],
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: email,
+                  decoration:
+                      const InputDecoration(hintText: "email@gmail.com"),
+                  keyboardType: TextInputType.emailAddress,
                 ),
-              );
-            default:
-              return const Text("loading...");
-          }
+                TextFormField(
+                  controller: password,
+                  decoration: const InputDecoration(hintText: "password123"),
+                  obscureText: true,
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                OutlinedButton(
+                  onPressed: () async {
+                    await auth.register(
+                      email.text,
+                      password.text,
+                      context,
+                    );
+                  },
+                  style: const ButtonStyle(
+                    padding: MaterialStatePropertyAll(
+                      EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                    ),
+                  ),
+                  child: const Text("Register"),
+                ),
+              ],
+            ),
+          );
         },
       ),
     );
