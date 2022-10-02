@@ -1,6 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:todo_app/firebase/auth.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -10,14 +9,14 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  final TextEditingController _email = TextEditingController();
-  final TextEditingController _password = TextEditingController();
+  AuthService auth = AuthService();
+  final TextEditingController email = TextEditingController();
+  final TextEditingController password = TextEditingController();
 
   @override
   void dispose() {
-    _email.dispose();
-    _password.dispose();
+    email.dispose();
+    password.dispose();
     super.dispose();
   }
 
@@ -27,33 +26,38 @@ class _LogInState extends State<LogIn> {
       appBar: AppBar(
         title: const Text("LogIN"),
       ),
-      body: Column(
-        children: [
-          TextFormField(
-            controller: _email,
-            decoration: const InputDecoration(hintText: "email@gmail.com"),
-            keyboardType: TextInputType.emailAddress,
-          ),
-          TextFormField(
-            controller: _password,
-            decoration: const InputDecoration(hintText: "password123"),
-            obscureText: true,
-          ),
-          OutlinedButton(
-            onPressed: () async {
-              final email = _email.text;
-              final password = _password.text;
-              await auth.createUserWithEmailAndPassword(
-                  email: email, password: password);
-            },
-            style: const ButtonStyle(
-              padding: MaterialStatePropertyAll(
-                EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-              ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+        child: Column(
+          children: [
+            TextFormField(
+              controller: email,
+              decoration: const InputDecoration(hintText: "email@gmail.com"),
+              keyboardType: TextInputType.emailAddress,
             ),
-            child: const Text("LogIn"),
-          ),
-        ],
+            TextFormField(
+              controller: password,
+              decoration: const InputDecoration(hintText: "password123"),
+              obscureText: true,
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            OutlinedButton(
+              onPressed: () async {
+                final UserCredential =
+                    auth.login(email.text, password.text, context);
+                print(UserCredential);
+              },
+              style: const ButtonStyle(
+                padding: MaterialStatePropertyAll(
+                  EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                ),
+              ),
+              child: const Text("LogIn"),
+            ),
+          ],
+        ),
       ),
     );
   }
