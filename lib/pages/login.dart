@@ -24,40 +24,54 @@ class _LogInState extends State<LogIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("LogIN"),
+        title: const Text("Login"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        child: Column(
-          children: [
-            TextFormField(
-              controller: email,
-              decoration: const InputDecoration(hintText: "email@gmail.com"),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            TextFormField(
-              controller: password,
-              decoration: const InputDecoration(hintText: "password123"),
-              obscureText: true,
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            OutlinedButton(
-              onPressed: () async {
-                final UserCredential =
-                    auth.login(email.text, password.text, context);
-                print(UserCredential);
-              },
-              style: const ButtonStyle(
-                padding: MaterialStatePropertyAll(
-                  EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+      body: FutureBuilder(
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.done:
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: email,
+                      decoration:
+                          const InputDecoration(hintText: "email@gmail.com"),
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    TextFormField(
+                      controller: password,
+                      decoration:
+                          const InputDecoration(hintText: "password123"),
+                      obscureText: true,
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    OutlinedButton(
+                      onPressed: () async {
+                        final UserCredential = auth.login(
+                          email.text,
+                          password.text,
+                          context,
+                        );
+                      },
+                      style: const ButtonStyle(
+                        padding: MaterialStatePropertyAll(
+                          EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                        ),
+                      ),
+                      child: const Text("LogIn"),
+                    ),
+                  ],
                 ),
-              ),
-              child: const Text("LogIn"),
-            ),
-          ],
-        ),
+              );
+            default:
+              return const Text("loading");
+          }
+        },
       ),
     );
   }
