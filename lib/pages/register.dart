@@ -2,7 +2,7 @@ import 'dart:developer' as devtools show log;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_app/pages/login.dart';
+import 'package:todo_app/constants/routes.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -50,7 +50,8 @@ class _RegisterViewState extends State<RegisterView> {
                     email: email.text,
                     password: password.text,
                   );
-                  devtools.log(userCredential.toString());
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil(loginRoute, (route) => false);
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'invalid-email') {
                     devtools.log("Invalid Email and Password");
@@ -74,7 +75,7 @@ class _RegisterViewState extends State<RegisterView> {
             TextButton(
               onPressed: () {
                 Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/login/', (route) => false);
+                    .pushNamedAndRemoveUntil(loginRoute, (route) => false);
               },
               child: const Text("Have An Account? Login in here"),
             )
