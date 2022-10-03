@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/firebase/auth.dart';
 import 'package:todo_app/firebase_options.dart';
+import 'package:todo_app/pages/login.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -14,15 +15,11 @@ class RegisterView extends StatefulWidget {
 class _RegisterViewState extends State<RegisterView> {
   AuthService auth = AuthService();
   final TextEditingController email = TextEditingController();
-  final TextEditingController userName = TextEditingController();
-  final TextEditingController phone = TextEditingController();
   final TextEditingController password = TextEditingController();
 
   @override
   void dispose() {
-    userName.dispose();
     email.dispose();
-    phone.dispose();
     password.dispose();
     super.dispose();
   }
@@ -46,11 +43,6 @@ class _RegisterViewState extends State<RegisterView> {
                 child: Column(
                   children: [
                     TextFormField(
-                      controller: userName,
-                      decoration: const InputDecoration(hintText: "john320"),
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    TextFormField(
                       controller: email,
                       decoration:
                           const InputDecoration(hintText: "john320@gmail.com"),
@@ -62,11 +54,6 @@ class _RegisterViewState extends State<RegisterView> {
                           const InputDecoration(hintText: "password320"),
                       obscureText: true,
                     ),
-                    TextFormField(
-                      controller: phone,
-                      decoration:
-                          const InputDecoration(hintText: "+990123456789"),
-                    ),
                     const SizedBox(
                       height: 30,
                     ),
@@ -74,10 +61,8 @@ class _RegisterViewState extends State<RegisterView> {
                       onPressed: () async {
                         try {
                           await auth.register(
-                            userName.text,
                             email.text,
                             password.text,
-                            phone.text,
                             context,
                           );
                         } on FirebaseAuthException catch (e) {
@@ -99,6 +84,18 @@ class _RegisterViewState extends State<RegisterView> {
                       ),
                       child: const Text("Register"),
                     ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginView()));
+                      },
+                      child: const Text("Have An Account? Login in here"),
+                    )
                   ],
                 ),
               );

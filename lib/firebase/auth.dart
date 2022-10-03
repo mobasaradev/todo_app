@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_app/pages/homepage.dart';
+import 'package:todo_app/pages/login.dart';
 
 class AuthService {
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -9,8 +11,6 @@ class AuthService {
   Future<void> register(
     final email,
     final password,
-    final userName,
-    final phone,
     BuildContext context,
   ) async {
     await auth.createUserWithEmailAndPassword(
@@ -18,11 +18,12 @@ class AuthService {
       password: password,
     );
     await database.collection('user').add({
-      "userName": userName,
       "email": email,
       "password": password,
-      "phone": phone,
-    });
+    }).then((value) => Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginView()),
+        (route) => false));
   }
 
   //Login
@@ -31,9 +32,14 @@ class AuthService {
     final password,
     BuildContext context,
   ) async {
-    await auth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    await auth
+        .signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        )
+        .then((value) => Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+            (route) => false));
   }
 }
