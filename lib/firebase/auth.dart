@@ -42,4 +42,11 @@ class AuthService {
             MaterialPageRoute(builder: (context) => const HomePage()),
             (route) => false));
   }
+
+  Future<void> signout(BuildContext context) async {
+    await auth.signOut().then((value) => Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginView()),
+        (route) => false));
+  }
 }
