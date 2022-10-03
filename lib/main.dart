@@ -2,7 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/firebase_options.dart';
 import 'package:todo_app/pages/homepage.dart';
-
+import 'package:todo_app/pages/login.dart';
+import 'package:todo_app/pages/register.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +25,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.teal,
       ),
       home: const NotesView(),
+      routes: {
+        '/login/': (context) => const LoginView(),
+        '/register/': (context) => const RegisterView(),
+        '/notes/': (context) => const NotesView(),
+      },
     );
   }
 }

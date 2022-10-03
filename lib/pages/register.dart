@@ -1,6 +1,7 @@
+import 'dart:developer' as devtools show log;
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_app/firebase/auth.dart';
 import 'package:todo_app/pages/login.dart';
 
 class RegisterView extends StatefulWidget {
@@ -11,7 +12,6 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  AuthService auth = AuthService();
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
 
@@ -45,20 +45,19 @@ class _RegisterViewState extends State<RegisterView> {
             OutlinedButton(
               onPressed: () async {
                 try {
-                  await auth.register(
-                    email.text,
-                    password.text,
-                    context,
+                  final userCredential = await FirebaseAuth.instance
+                      .createUserWithEmailAndPassword(
+                    email: email.text,
+                    password: password.text,
                   );
+                  devtools.log(userCredential.toString());
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'invalid-email') {
-                    print("Invalid Email and Password");
+                    devtools.log("Invalid Email and Password");
                   } else if (e.code == 'email-already-in-use') {
-                    print("Email used once");
+                    devtools.log("Email used once");
                   } else if (e.code == 'weak-password') {
-                    print("Weak password. Make a strong password");
-                  } else {
-                    print(e);
+                    devtools.log("Weak password. Make a strong password");
                   }
                 }
               },
@@ -74,12 +73,8 @@ class _RegisterViewState extends State<RegisterView> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LoginView(),
-                  ),
-                );
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/login/', (route) => false);
               },
               child: const Text("Have An Account? Login in here"),
             )

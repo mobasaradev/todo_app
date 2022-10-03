@@ -3,7 +3,6 @@ import 'dart:developer' as devtools show log;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_app/firebase/auth.dart';
 import 'package:todo_app/firebase_options.dart';
 import 'package:todo_app/pages/login.dart';
 import 'package:todo_app/pages/verify_email.dart';
@@ -53,7 +52,6 @@ class NotesView extends StatefulWidget {
 }
 
 class _NotesViewState extends State<NotesView> {
-  AuthService auth = AuthService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +63,11 @@ class _NotesViewState extends State<NotesView> {
               case MenuAction.logout:
                 final shouldLogout = await showLogOutDialog(context);
                 if (shouldLogout) {
-                  auth.signout(context);
+                  FirebaseAuth.instance.signOut().then(
+                        (value) => Navigator.of(context)
+                            .pushNamedAndRemoveUntil(
+                                '/login/', (route) => false),
+                      );
                 }
             }
             devtools.log(value.toString());

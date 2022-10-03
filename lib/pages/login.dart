@@ -1,7 +1,7 @@
+import 'dart:developer' as devtools show log;
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_app/firebase/auth.dart';
-import 'package:todo_app/pages/register.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -11,7 +11,6 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  AuthService auth = AuthService();
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
 
@@ -45,22 +44,21 @@ class _LoginViewState extends State<LoginView> {
             OutlinedButton(
               onPressed: () async {
                 try {
-                  await auth.login(
-                    email.text,
-                    password.text,
-                    context,
+                  final userCredential =
+                      await FirebaseAuth.instance.signInWithEmailAndPassword(
+                    email: email.text,
+                    password: password.text,
                   );
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/notes/', (route) => false);
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'invalid-email') {
-                    print("Invalid email and password");
+                    devtools.log("Invalid email and password");
                   } else if (e.code == 'user-not-found') {
-                    print("User Not Found");
+                    devtools.log("User Not Found");
                   } else if (e.code == 'wrong-password') {
-                    print("Wrong password");
+                    devtools.log("Wrong password");
                   }
-                } catch (e) {
-                  print(e.runtimeType);
-                  print(e);
                 }
               },
               style: const ButtonStyle(
@@ -75,12 +73,8 @@ class _LoginViewState extends State<LoginView> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const RegisterView(),
-                  ),
-                );
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/register/', (route) => false);
               },
               child: const Text("Don't have any account? Register in here"),
             )
