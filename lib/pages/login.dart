@@ -1,15 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/firebase/auth.dart';
+import 'package:todo_app/firebase_options.dart';
 
-class LogIn extends StatefulWidget {
-  const LogIn({super.key});
+class LoginView extends StatefulWidget {
+  const LoginView({super.key});
 
   @override
-  State<LogIn> createState() => _LogInState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
-class _LogInState extends State<LogIn> {
+class _LoginViewState extends State<LoginView> {
   AuthService auth = AuthService();
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
@@ -28,57 +30,66 @@ class _LogInState extends State<LogIn> {
         title: const Text("Login"),
       ),
       body: FutureBuilder(
+        future: Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        ),
         builder: (context, snapshot) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: email,
-                  decoration:
-                      const InputDecoration(hintText: "email@gmail.com"),
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                TextFormField(
-                  controller: password,
-                  decoration: const InputDecoration(hintText: "password123"),
-                  obscureText: true,
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                OutlinedButton(
-                  onPressed: () async {
-                    try {
-                      await auth.login(
-                        email.text,
-                        password.text,
-                        context,
-                      );
-                    } on FirebaseAuthException catch (e) {
-                      if (e.code == 'invalid-email') {
-                        print("Invalid email and password");
-                      } else if (e.code == 'user-not-found') {
-                        print("User Not Found");
-                      } else if (e.code == 'wrong-password') {
-                        print("Wrong password");
-                      }
-                    } catch (e) {
-                      print("something is wrong");
-                      print(e.runtimeType);
-                      print(e);
-                    }
-                  },
-                  style: const ButtonStyle(
-                    padding: MaterialStatePropertyAll(
-                      EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+          switch (snapshot.connectionState) {
+            case ConnectionState.done:
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: email,
+                      decoration:
+                          const InputDecoration(hintText: "email@gmail.com"),
+                      keyboardType: TextInputType.emailAddress,
                     ),
-                  ),
-                  child: const Text("LogIn"),
+                    TextFormField(
+                      controller: password,
+                      decoration:
+                          const InputDecoration(hintText: "password123"),
+                      obscureText: true,
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    OutlinedButton(
+                      onPressed: () async {
+                        try {
+                          await auth.login(
+                            email.text,
+                            password.text,
+                            context,
+                          );
+                        } on FirebaseAuthException catch (e) {
+                          if (e.code == 'invalid-email') {
+                            print("Invalid email and password");
+                          } else if (e.code == 'user-not-found') {
+                            print("User Not Found");
+                          } else if (e.code == 'wrong-password') {
+                            print("Wrong password");
+                          }
+                        } catch (e) {
+                          print(e.runtimeType);
+                          print(e);
+                        }
+                      },
+                      style: const ButtonStyle(
+                        padding: MaterialStatePropertyAll(
+                          EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                        ),
+                      ),
+                      child: const Text("LogIn"),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          );
+              );
+            default:
+              return const Text("Loading...");
+          }
         },
       ),
     );
