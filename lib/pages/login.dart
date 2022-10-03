@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/firebase/auth.dart';
-import 'package:todo_app/firebase_options.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -26,71 +24,53 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Login"),
-      ),
-      body: FutureBuilder(
-        future: Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        ),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: email,
-                      decoration:
-                          const InputDecoration(hintText: "email@gmail.com"),
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    TextFormField(
-                      controller: password,
-                      decoration:
-                          const InputDecoration(hintText: "password123"),
-                      obscureText: true,
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    OutlinedButton(
-                      onPressed: () async {
-                        try {
-                          await auth.login(
-                            email.text,
-                            password.text,
-                            context,
-                          );
-                        } on FirebaseAuthException catch (e) {
-                          if (e.code == 'invalid-email') {
-                            print("Invalid email and password");
-                          } else if (e.code == 'user-not-found') {
-                            print("User Not Found");
-                          } else if (e.code == 'wrong-password') {
-                            print("Wrong password");
-                          }
-                        } catch (e) {
-                          print(e.runtimeType);
-                          print(e);
-                        }
-                      },
-                      style: const ButtonStyle(
-                        padding: MaterialStatePropertyAll(
-                          EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                        ),
-                      ),
-                      child: const Text("LogIn"),
-                    ),
-                  ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+        child: Column(
+          children: [
+            TextFormField(
+              controller: email,
+              decoration: const InputDecoration(hintText: "email@gmail.com"),
+              keyboardType: TextInputType.emailAddress,
+            ),
+            TextFormField(
+              controller: password,
+              decoration: const InputDecoration(hintText: "password123"),
+              obscureText: true,
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            OutlinedButton(
+              onPressed: () async {
+                try {
+                  await auth.login(
+                    email.text,
+                    password.text,
+                    context,
+                  );
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'invalid-email') {
+                    print("Invalid email and password");
+                  } else if (e.code == 'user-not-found') {
+                    print("User Not Found");
+                  } else if (e.code == 'wrong-password') {
+                    print("Wrong password");
+                  }
+                } catch (e) {
+                  print(e.runtimeType);
+                  print(e);
+                }
+              },
+              style: const ButtonStyle(
+                padding: MaterialStatePropertyAll(
+                  EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                 ),
-              );
-            default:
-              return const Text("Loading...");
-          }
-        },
+              ),
+              child: const Text("LogIn"),
+            ),
+          ],
+        ),
       ),
     );
   }

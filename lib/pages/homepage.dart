@@ -21,14 +21,10 @@ class HomePage extends StatelessWidget {
             case ConnectionState.done:
               final user = FirebaseAuth.instance.currentUser;
               if (user?.emailVerified ?? false) {
+                return const Text("Done");
               } else {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const VerifyEmailView(),
-                  ),
-                );
+                return const VerifyEmailView();
               }
-              return const Text("Done");
             default:
               return const Text("Loading...");
           }
@@ -43,23 +39,17 @@ class VerifyEmailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Verify email"),
-      ),
-      body: Column(
-        children: [
-          const Text("Please verify your email address."),
-          OutlinedButton(
-              onPressed: () async {
-                final user = FirebaseAuth.instance.currentUser;
-                var userr = user?.sendEmailVerification();
-                print(userr);
-                await user?.sendEmailVerification();
-              },
-              child: const Text("Send email verification link"))
-        ],
-      ),
+    return Column(
+      children: [
+        const Text("Please verify your email address."),
+        OutlinedButton(
+          onPressed: () async {
+            final user = FirebaseAuth.instance.currentUser;
+            await user?.sendEmailVerification();
+          },
+          child: const Text("Send email verification link"),
+        )
+      ],
     );
   }
 }
