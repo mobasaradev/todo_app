@@ -1,8 +1,7 @@
-import 'dart:developer' as devtools show log;
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/constants/routes.dart';
+import 'package:todo_app/utilities/show_error_dailog.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -54,12 +53,17 @@ class _LoginViewState extends State<LoginView> {
                       .pushNamedAndRemoveUntil(notesRoute, (route) => false);
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'invalid-email') {
-                    devtools.log("Invalid email and password");
+                    await showErrorDialog(
+                        context, 'Invalid email and password');
                   } else if (e.code == 'user-not-found') {
-                    devtools.log("User Not Found");
+                    await showErrorDialog(context, 'User not found');
                   } else if (e.code == 'wrong-password') {
-                    devtools.log("Wrong password");
+                    await showErrorDialog(context, 'Wrong password');
+                  } else {
+                    await showErrorDialog(context, 'Error: ${e.code}');
                   }
+                } catch (e) {
+                  await showErrorDialog(context, e.toString());
                 }
               },
               style: const ButtonStyle(
@@ -85,3 +89,4 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 }
+
