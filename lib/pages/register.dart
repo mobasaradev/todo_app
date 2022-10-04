@@ -1,8 +1,7 @@
-import 'dart:developer' as devtools show log;
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/constants/routes.dart';
+import 'package:todo_app/utilities/show_error_dialog.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -45,21 +44,40 @@ class _RegisterViewState extends State<RegisterView> {
             OutlinedButton(
               onPressed: () async {
                 try {
-                  final userCredential = await FirebaseAuth.instance
-                      .createUserWithEmailAndPassword(
+                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
                     email: email.text,
                     password: password.text,
                   );
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil(loginRoute, (route) => false);
+                  final user = FirebaseAuth.instance.currentUser;
+                  await user?.sendEmailVerification();
+                  Navigator.of(context).pushNamed(verifyEmailRoute);
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'invalid-email') {
-                    devtools.log("Invalid Email and Password");
+                    await showErrorDialog(
+                      context,
+                      'Invalid email and password',
+                    );
                   } else if (e.code == 'email-already-in-use') {
-                    devtools.log("Email used once");
+                    await showErrorDialog(
+                      context,
+                      'Email used once',
+                    );
                   } else if (e.code == 'weak-password') {
-                    devtools.log("Weak password. Make a strong password");
+                    await showErrorDialog(
+                      context,
+                      'Weak password. Make a strong password',
+                    );
+                  } else {
+                    await showErrorDialog(
+                      context,
+                      'Error: ${e.code}',
+                    );
                   }
+                } catch (e) {
+                  await showErrorDialog(
+                    context,
+                    e.toString(),
+                  );
                 }
               },
               style: const ButtonStyle(

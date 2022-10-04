@@ -5,6 +5,7 @@ import 'package:todo_app/firebase_options.dart';
 import 'package:todo_app/pages/homepage.dart';
 import 'package:todo_app/pages/login.dart';
 import 'package:todo_app/pages/register.dart';
+import 'package:todo_app/pages/verify_email.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,11 +26,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),
-      home: const NotesView(),
+      home: const VerifyEmailView(),
       routes: {
         loginRoute: (context) => const LoginView(),
         registerRoute: (context) => const RegisterView(),
         notesRoute: (context) => const NotesView(),
+        verifyEmailRoute: (context) => const VerifyEmailView(),
       },
     );
   }
