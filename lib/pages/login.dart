@@ -44,13 +44,22 @@ class _LoginViewState extends State<LoginView> {
             OutlinedButton(
               onPressed: () async {
                 try {
-                  final userCredential =
-                      await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  await FirebaseAuth.instance.signInWithEmailAndPassword(
                     email: email.text,
                     password: password.text,
                   );
-                  Navigator.of(context)
+                  final user = FirebaseAuth.instance.currentUser;
+                  if (user?.emailVerified ?? false) {
+                    //user verified
+                    Navigator.of(context)
                       .pushNamedAndRemoveUntil(notesRoute, (route) => false);
+                    
+                  } else {
+                    //user not verified
+                    Navigator.of(context)
+                      .pushNamedAndRemoveUntil(verifyEmailRoute, (route) => false);
+                  }
+                  
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'invalid-email') {
                     await showErrorDialog(
@@ -89,4 +98,3 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 }
-
